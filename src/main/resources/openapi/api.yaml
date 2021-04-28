@@ -105,11 +105,9 @@ components:
         - title
         - link
         - description
-        - tags
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
         title:
           type: string
         link:

@@ -1,12 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     id("org.springframework.boot") version "2.4.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.4.32"
+    kotlin("kapt") version "1.4.32"
     kotlin("plugin.spring") version "1.4.32"
-    id("org.springframework.experimental.aot") version "0.9.2"
     id("org.openapi.generator") version "5.1.0"
 }
 
@@ -30,14 +29,20 @@ buildscript {
     }
 }
 
+val generatedSourcesDir = "$buildDir/generated/openapi"
+
 tasks.compileJava {
+    dependsOn(tasks.openApiGenerate)
+}
+
+tasks.compileKotlin {
     dependsOn(tasks.openApiGenerate)
 }
 
 openApiGenerate {
     generatorName.set("kotlin-spring")
-    inputSpec.set("$rootDir/src/main/resources/api/api.yaml")
-    outputDir.set("$buildDir/generated")
+    inputSpec.set("$rootDir/src/main/resources/openapi/api.yaml")
+    outputDir.set(generatedSourcesDir)
     apiPackage.set("$group.api")
     modelPackage.set("$group.model")
     generateApiTests.set(false)
@@ -45,10 +50,18 @@ openApiGenerate {
     generateModelTests.set(false)
     generateModelDocumentation.set(false)
     configOptions.set(mapOf(
-        "dateLibrary" to "java8",
-        "interfaceOnly" to "true",
-        "reactive" to "true"
+            "dateLibrary" to "java8",
+            "interfaceOnly" to "true",
+            "reactive" to "true"
     ))
+}
+
+sourceSets {
+    getByName("main") {
+        java {
+            srcDir("$generatedSourcesDir/src/main/kotlin")
+        }
+    }
 }
 
 repositories {
@@ -58,8 +71,10 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.mapstruct:mapstruct:1.4.2.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -81,9 +96,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks.withType<BootBuildImage> {
-    builder = "paketobuildpacks/builder:tiny"
-    environment = mapOf("BP_NATIVE_IMAGE" to "true")
 }
