@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "bff3da8a-0bcd-4560-abb7-33adfcf9769f",
+		"name": "Tools",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Tool",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Notion\",\n    \"link\": \"https://notion.so\",\n    \"description\": \"All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized.\",\n    \"tags\": [\n        \"organization\",\n        \"planning\",\n        \"collaboration\",\n        \"writing\",\n        \"calendar\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/tools",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"tools"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Tools",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/v1/tools?limit=10&tag=organization",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"tools"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "tag",
+							"value": "organization"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Tool",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/v1/tools/6089b019315b0951bcf6a227",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"tools",
+						"6089b019315b0951bcf6a227"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find Tool By Id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/v1/tools/608ab73cf862796964858495",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"tools",
+						"608ab73cf862796964858495"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

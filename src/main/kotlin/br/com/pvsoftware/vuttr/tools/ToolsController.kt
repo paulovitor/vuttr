@@ -9,21 +9,23 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-class ToolsController(private val toolsService: ToolsService) : ToolsApi {
+class ToolsController(private val service: ToolsService) : ToolsApi {
 
-    override suspend fun createTool(toolBody: ToolBody): ResponseEntity<Tool> {
-        return ResponseEntity.created(URI.create("abc")).body(toolsService.create(toolBody))
-    }
+    override suspend fun createTool(toolBody: ToolBody): ResponseEntity<Tool> =
+            service.create(toolBody)
+                    .let { ResponseEntity.created(URI.create("/tools/${it?.id}")).body(it) }
 
-    override fun listTools(limit: Int?, tag: String?): ResponseEntity<Flow<Tool>> {
-        return ResponseEntity.ok(toolsService.findAll(limit, tag))
-    }
+    override fun listTools(limit: Int?, tag: String?): ResponseEntity<Flow<Tool>> =
+            ResponseEntity.ok(service.findAll(limit, tag))
 
-    override suspend fun deleteToolById(id: String): ResponseEntity<Unit> {
-        return super.deleteToolById(id)
-    }
+    override suspend fun deleteToolById(id: String): ResponseEntity<Unit> =
+            if (service.delete(id)) ResponseEntity.noContent().build()
+            else ResponseEntity.notFound().build()
 
-    override suspend fun showToolById(id: String): ResponseEntity<Tool> {
-        return super.showToolById(id)
-    }
+    override suspend fun showToolById(id: String): ResponseEntity<Tool> =
+            service.findById(id)
+                    .let {
+                        if (it == null) ResponseEntity.notFound().build()
+                        else ResponseEntity.ok(it)
+                    }
 }

@@ -1,13 +1,21 @@
 package br.com.pvsoftware.vuttr.tools
 
-import br.com.pvsoftware.model.ToolBody
 import br.com.pvsoftware.vuttr.config.ValidationConfig
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.URI
+import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.any
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getTool
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolBody
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -25,12 +33,27 @@ class ToolsControllerTest {
     @MockBean
     private lateinit var service: ToolsService
 
-    // FIXME: Remove supend
+    private val testDispatcher = TestCoroutineDispatcher()
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+
+        MockitoAnnotations.openMocks(this)
+    }
+
+    @AfterEach
+    fun cleanUp() {
+        Dispatchers.resetMain()
+
+        testDispatcher.cleanupTestCoroutines()
+    }
+
     @Test
-    suspend fun createToolShouldReturnCreated() {
+    fun createToolShouldReturnCreated() = testDispatcher.runBlockingTest {
         val toolBody = getToolBody()
 
-        Mockito.`when`(service.create(Mockito.any(ToolBody::class.java))).thenReturn(getTool())
+        Mockito.`when`(service.create(any())).thenReturn(getTool())
 
         client.post()
                 .uri(URI)
@@ -52,7 +75,9 @@ class ToolsControllerTest {
     }
 
     @Test
-    fun deleteToolByIdSholdReturnNoContent() {
+    fun deleteToolByIdSholdReturnNoContent() = testDispatcher.runBlockingTest {
+        Mockito.`when`(service.delete(Mockito.anyString())).thenReturn(true)
+
         client.delete()
                 .uri("$URI/{id}", 1)
                 .exchange()
@@ -61,11 +86,35 @@ class ToolsControllerTest {
     }
 
     @Test
-    fun showToolByIdShouldReturnOk() {
+    fun deleteToolByIdSholdReturnNotFound() = testDispatcher.runBlockingTest {
+        Mockito.`when`(service.delete(Mockito.anyString())).thenReturn(false)
+
         client.delete()
                 .uri("$URI/{id}", 1)
                 .exchange()
                 .expectStatus()
+                .isNotFound
+    }
+
+    @Test
+    fun showToolByIdShouldReturnOk() = testDispatcher.runBlockingTest {
+        Mockito.`when`(service.findById(Mockito.anyString())).thenReturn(getTool())
+
+        client.get()
+                .uri("$URI/{id}", 1)
+                .exchange()
+                .expectStatus()
                 .is2xxSuccessful
+    }
+
+    @Test
+    fun showToolByIdShouldReturnNotFound() = testDispatcher.runBlockingTest {
+        Mockito.`when`(service.findById(Mockito.anyString())).thenReturn(null)
+
+        client.get()
+                .uri("$URI/{id}", 1)
+                .exchange()
+                .expectStatus()
+                .isNotFound
     }
 }
