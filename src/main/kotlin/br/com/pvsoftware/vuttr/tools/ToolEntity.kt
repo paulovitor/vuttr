@@ -5,9 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(value = "tools")
 data class ToolEntity(
-
-        @Id
-        var id: String?,
+        @Id var id: String?,
         var title: String?,
         var link: String?,
         var description: String?,

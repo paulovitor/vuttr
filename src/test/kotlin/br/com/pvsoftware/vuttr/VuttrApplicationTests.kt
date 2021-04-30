@@ -9,5 +9,4 @@ class VuttrApplicationTests {
 	@Test
 	fun contextLoads() {
 	}
-
 }

@@ -5,8 +5,8 @@ import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.URI
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.any
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getTool
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolBody
+import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -22,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import reactor.core.publisher.Flux
 
 @WebFluxTest(controllers = [ToolsController::class])
 @Import(ValidationConfig::class)
@@ -32,6 +33,9 @@ class ToolsControllerTest {
 
     @MockBean
     private lateinit var service: ToolsService
+
+    @MockBean
+    private lateinit var converter: ToolsConverter
 
     private val testDispatcher = TestCoroutineDispatcher()
 
@@ -51,21 +55,26 @@ class ToolsControllerTest {
 
     @Test
     fun createToolShouldReturnCreated() = testDispatcher.runBlockingTest {
-        val toolBody = getToolBody()
+        val toolEntity = getToolEntity()
+        Mockito.`when`(converter.convertToEntity(any())).thenReturn(toolEntity)
 
-        Mockito.`when`(service.create(any())).thenReturn(getTool())
+        Mockito.`when`(service.create(any())).thenReturn(toolEntity)
+
+        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
 
         client.post()
                 .uri(URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(toolBody)
+                .bodyValue(getToolBody())
                 .exchange()
                 .expectStatus().isCreated
     }
 
     @Test
     fun listToolsShouldReturnOk() {
-        Mockito.`when`(service.findAll(Mockito.anyInt(), Mockito.anyString())).thenReturn(emptyFlow())
+        Mockito.`when`(service.findAll(any(), any())).thenReturn(Flux.just(getToolEntity()))
+
+        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
 
         client.get()
                 .uri(URI)
@@ -98,7 +107,9 @@ class ToolsControllerTest {
 
     @Test
     fun showToolByIdShouldReturnOk() = testDispatcher.runBlockingTest {
-        Mockito.`when`(service.findById(Mockito.anyString())).thenReturn(getTool())
+        Mockito.`when`(service.findById(Mockito.anyString())).thenReturn(getToolEntity())
+
+        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
 
         client.get()
                 .uri("$URI/{id}", 1)

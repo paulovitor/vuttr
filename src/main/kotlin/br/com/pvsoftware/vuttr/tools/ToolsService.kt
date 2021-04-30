@@ -1,17 +1,14 @@
 package br.com.pvsoftware.vuttr.tools
 
-import br.com.pvsoftware.model.Tool
-import br.com.pvsoftware.model.ToolBody
-import kotlinx.coroutines.flow.Flow
-import reactor.core.publisher.Mono
+import reactor.core.publisher.Flux
 
 interface ToolsService {
 
-    suspend fun create(toolBody: ToolBody): Tool?
+    suspend fun create(toolEntity: ToolEntity): ToolEntity?
 
     suspend fun delete(id: String): Boolean
 
-    fun findAll(limit: Int?, tag: String?): Flow<Tool>
+    fun findAll(tag: String?, limit: Int?): Flux<ToolEntity>
 
-    suspend fun findById(id: String): Tool?
+    suspend fun findById(id: String): ToolEntity?
 }

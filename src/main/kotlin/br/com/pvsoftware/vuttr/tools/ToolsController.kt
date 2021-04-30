@@ -4,19 +4,24 @@ import br.com.pvsoftware.api.ToolsApi
 import br.com.pvsoftware.model.Tool
 import br.com.pvsoftware.model.ToolBody
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.reactive.asFlow
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-class ToolsController(private val service: ToolsService) : ToolsApi {
+class ToolsController(private val service: ToolsService, private val converter: ToolsConverter) : ToolsApi {
 
     override suspend fun createTool(toolBody: ToolBody): ResponseEntity<Tool> =
-            service.create(toolBody)
-                    .let { ResponseEntity.created(URI.create("/tools/${it?.id}")).body(it) }
+            service.create(converter.convertToEntity(toolBody))
+                    .let {
+                        ResponseEntity.created(URI.create("/tools/${it?.id}"))
+                                .body(converter.convertToDto(it))
+                    }
 
     override fun listTools(limit: Int?, tag: String?): ResponseEntity<Flow<Tool>> =
-            ResponseEntity.ok(service.findAll(limit, tag))
+            ResponseEntity.ok(service.findAll(tag, limit).asFlow().map(converter::convertToDto))
 
     override suspend fun deleteToolById(id: String): ResponseEntity<Unit> =
             if (service.delete(id)) ResponseEntity.noContent().build()
@@ -26,6 +31,6 @@ class ToolsController(private val service: ToolsService) : ToolsApi {
             service.findById(id)
                     .let {
                         if (it == null) ResponseEntity.notFound().build()
-                        else ResponseEntity.ok(it)
+                        else ResponseEntity.ok(converter.convertToDto(it))
                     }
 }

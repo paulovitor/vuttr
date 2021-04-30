@@ -1,22 +1,17 @@
 package br.com.pvsoftware.vuttr.tools
 
-import br.com.pvsoftware.model.Tool
-import br.com.pvsoftware.model.ToolBody
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 
 @Service
-class ToolsServiceImpl(private val repository: ToolsRepository, private val converter: ToolsConverter) : ToolsService {
+class ToolsServiceImpl(private val repository: ToolsRepository) : ToolsService {
 
-    override suspend fun create(toolBody: ToolBody): Tool? = repository.save(converter.convertToEntity(toolBody))
+    override suspend fun create(toolEntity: ToolEntity): ToolEntity? = repository.save(toolEntity)
             .awaitFirst()
-            .let(converter::convertToDto)
 
     override suspend fun delete(id: String): Boolean = repository.findById(id)
             .awaitFirstOrNull()
@@ -25,13 +20,12 @@ class ToolsServiceImpl(private val repository: ToolsRepository, private val conv
                 else repository.delete(it).awaitFirstOrNull().let { true }
             }
 
-    override fun findAll(limit: Int?, tag: String?): Flow<Tool> {
+    override fun findAll(tag: String?, limit: Int?): Flux<ToolEntity> {
         val pageable = if (limit == null) Pageable.unpaged() else PageRequest.of(0, limit)
-        val result = if (tag == null) repository.findByIdNotNull(pageable) else repository.findAllByTagsIn(tag, pageable)
-        return result.asFlow().map(converter::convertToDto)
+        return if (tag == null) repository.findByIdNotNull(pageable)
+        else repository.findAllByTagsIn(tag, pageable)
     }
 
-    override suspend fun findById(id: String): Tool? = repository.findById(id)
+    override suspend fun findById(id: String): ToolEntity? = repository.findById(id)
             .awaitFirstOrNull()
-            .let(converter::convertToDto)
 }

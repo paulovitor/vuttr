@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     id("org.springframework.boot") version "2.4.5"
@@ -7,6 +8,7 @@ plugins {
     kotlin("kapt") version "1.4.32"
     kotlin("plugin.spring") version "1.4.32"
     id("org.openapi.generator") version "5.1.0"
+    id("org.jmailen.kotlinter") version "3.4.3"
 }
 
 group = "br.com.pvsoftware"
@@ -54,6 +56,19 @@ openApiGenerate {
             "interfaceOnly" to "true",
             "reactive" to "true"
     ))
+}
+
+kotlinter {
+    ignoreFailures = false
+    reporters = arrayOf("checkstyle", "plain")
+    experimentalRules = true
+    disabledRules = arrayOf("parameter-list-wrapping", "indent")
+}
+
+tasks {
+    "lintKotlinMain"(LintTask::class) {
+        exclude("**/*ApiUtil.kt", "**/*ToolsApi.kt", "**/*Error.kt", "**/*Tool.kt", "**/*ToolBody.kt")
+    }
 }
 
 sourceSets {

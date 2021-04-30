@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class VuttrApplication
 
 fun main(args: Array<String>) {
-	runApplication<VuttrApplication>(*args)
+    runApplication<VuttrApplication>(*args)
 }

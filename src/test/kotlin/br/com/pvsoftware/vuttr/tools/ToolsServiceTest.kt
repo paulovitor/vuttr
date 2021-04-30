@@ -1,11 +1,9 @@
 package br.com.pvsoftware.vuttr.tools
 
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.any
-import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getTool
-import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolBody
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -29,9 +27,6 @@ class ToolsServiceTest {
     @Mock
     private lateinit var repository: ToolsRepository
 
-    @Mock
-    private lateinit var converter: ToolsConverter
-
     private val testDispatcher = TestCoroutineDispatcher()
 
     @BeforeEach
@@ -40,7 +35,7 @@ class ToolsServiceTest {
 
         MockitoAnnotations.openMocks(this)
 
-        service = ToolsServiceImpl(repository, converter)
+        service = ToolsServiceImpl(repository)
     }
 
     @AfterEach
@@ -54,13 +49,9 @@ class ToolsServiceTest {
     fun createShouldReturnTool() = testDispatcher.runBlockingTest {
         val toolEntity = getToolEntity()
 
-        Mockito.`when`(converter.convertToEntity(any())).thenReturn(toolEntity)
-
         Mockito.`when`(repository.save(any())).thenReturn(Mono.just(toolEntity))
 
-        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
-
-        val tool = service.create(getToolBody())
+        val tool = service.create(toolEntity)
 
         Assertions.assertNotNull(tool)
     }
@@ -89,43 +80,35 @@ class ToolsServiceTest {
     fun findAllWithEmptyLimitShouldReturnFlowOfTool() = testDispatcher.runBlockingTest {
         Mockito.`when`(repository.findAllByTagsIn(Mockito.anyString(), any())).thenReturn(Flux.just(getToolEntity()))
 
-        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
-
-        val tools = service.findAll(null, "organization")
+        val tools = service.findAll("organization", null)
 
         Assertions.assertNotNull(tools)
-        tools.first()?.let { Assertions.assertNotNull(it) }
+        tools.awaitFirstOrNull()?.let { Assertions.assertNotNull(it) }
     }
 
     @Test
     fun findAllWithEmptyTagShouldReturnFlowOfTool() = testDispatcher.runBlockingTest {
         Mockito.`when`(repository.findByIdNotNull(any())).thenReturn(Flux.just(getToolEntity()))
 
-        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
-
-        val tools = service.findAll(10, null)
+        val tools = service.findAll(null, 10)
 
         Assertions.assertNotNull(tools)
-        tools.first()?.let { Assertions.assertNotNull(it) }
+        tools.awaitFirstOrNull()?.let { Assertions.assertNotNull(it) }
     }
 
     @Test
     fun findAllShouldReturnFlowOfTool() = testDispatcher.runBlockingTest {
         Mockito.`when`(repository.findAllByTagsIn(Mockito.anyString(), any())).thenReturn(Flux.just(getToolEntity()))
 
-        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
-
-        val tools = service.findAll(10, "organization")
+        val tools = service.findAll("organization", 10)
 
         Assertions.assertNotNull(tools)
-        tools.first()?.let { Assertions.assertNotNull(it) }
+        tools.awaitFirstOrNull()?.let { Assertions.assertNotNull(it) }
     }
 
     @Test
     fun findByIdShouldReturnTool() = testDispatcher.runBlockingTest {
         Mockito.`when`(repository.findById(Mockito.anyString())).thenReturn(Mono.just(getToolEntity()))
-
-        Mockito.`when`(converter.convertToDto(any())).thenReturn(getTool())
 
         val tool = service.findById("abc")
 

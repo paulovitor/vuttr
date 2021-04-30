@@ -52,7 +52,6 @@ class ToolsRepositoryTest {
         Assertions.assertNotNull(tools)
 
         runBlocking {
-
             withContext(Dispatchers.Main) {
 //                FIXME
 //                https://github.com/Kotlin/kotlinx.coroutines/issues/1222
@@ -73,9 +72,7 @@ class ToolsRepositoryTest {
         Assertions.assertNotNull(tools)
 
         runBlocking {
-
             withContext(Dispatchers.Main) {
-
 //                FIXME
 //                https://github.com/Kotlin/kotlinx.coroutines/issues/1222
 //                tools.count().awaitFirstOrNull()?.let { Assertions.assertEquals(2L, it) }
@@ -94,9 +91,7 @@ class ToolsRepositoryTest {
 
         Assertions.assertNotNull(tools)
         runBlocking {
-
             withContext(Dispatchers.Main) {
-
 //                FIXME
 //                https://github.com/Kotlin/kotlinx.coroutines/issues/1222
 //                tools.count().awaitFirstOrNull()?.let { Assertions.assertEquals(1L, it) }
