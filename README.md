@@ -1,53 +1,80 @@
 # VUTTR (Very Useful Tools to Remember)
 
-A aplicação é um simples repositório para gerenciar ferramentas com seus respectivos nomes, links, descrições e tags
+The application is a simple repository to manage tools with your respective names, links, descriptions and tags
 
 ---
 
 ## Index
-- [Requirements](vuttr#requirements)
-- [Environment Setup](vuttr#environment-setup)
-- [Configure Database](vuttr#configure-database)
-- [Running the Application](vuttr#running-the-application)
-- [API Docs](vuttr#api-docs)
+- [Requirements](#requirements)
+- [Technologies used](#technologies-used)
+- [How to use](#how-to-use)
+    - [Run application via Docker](#run-application-via-docker)
+    - [Run application via bootJar](#run-application-via-bootjar)
+    - [Run application via Intellij](#run-application-via-intellij)
+    - [Run check lint](#run-check-lint)
+    - [Run unit tests](#run-unit-tests)
+- [API Docs](#api-docs)
 
 ---
 
-## Requirements
+## 📦 Requirements
 
 * JDK 11
 * Gradle
-* Mongodb
+* Docker
 
 ---
 
-## Environment Setup
+## 🚀 How to use
 
 ---
 
-### Configure Database
+### Run application via Docker
 
-Start oracle database docker
+1) Build spring boot docker image
+
+```sh
+gradle bootBuildImage
+```
+
+The gradle spring boot plugin will create vuttr:0.0.1-SNAPSHOT docker image
+
+2) Start docker-compose command
 
 ```sh
 docker-compose up -d
 ```
 
-Be sure that container has been started [state should be: up (healthy)]
+The docker-compose will initialize api and mongodb containers
+
+3) Be sure that container has been started [state should be: up (healthy)]
 ```sh
 docker-compose ps
 ```
 
-To accompain the log
+4) To accompain the log
 ```sh
 docker-compose logs -f
 ```
 
+The server is running on `http://localhost:3000`
+
 ---
 
-### Running the Application
+### Run application via bootJar
 
-Run the following command to run server
+1) The mongodb docker container need is running
+
+```sh
+docker-compose up -d mongo
+```
+
+2) Creating local environment variables
+```sh
+source env.sh
+```
+
+3) Start application server
 ```sh
 gradle bootRun
 ```
@@ -56,7 +83,27 @@ The server is running on `http://localhost:3000`
 
 ---
 
-### Running lint check
+### Run application via Intellij
+
+1) The mongodb docker container need is running
+
+```sh
+docker-compose up -d mongo
+```
+
+2) [Set up environment variables in Intellij](https://www.jetbrains.com/help/objc/add-environment-variables-and-program-arguments.html)
+
+![Set up environment variables in Intellij](docs/assets/environment-variable-intellij.png?raw=true "Set up environment variables in Intellij")
+
+3) Start application server
+
+![Start application server](docs/assets/start-server-intellij.png?raw=true "Start application server")
+
+The server is running on `http://localhost:3000`
+
+---
+
+### Run check lint
 
 Run the following command to run lint check
 ```sh
@@ -67,29 +114,19 @@ The reports will generate in `build/reports/klint`
 
 ---
 
-### Building native image
+### Run unit tests
 
-Run the following command to build native docker image
+Run the following command to run unit tests
 ```sh
-gradle bootBuildImage
+gradle test
 ```
 
-After complete will be possible execute application running the command:
-```sh
-docker-compose up -d api
-```
+The reports will generate in `build/reports/tests`
 
 ---
 
-### Creating local environment variables 
+## 📄 API Docs
 
-Run the following command to create environment variables
-```sh
-source env.sh
-```
+1) The openapi documentation is in: `src/main/resources/openapi/api.yml`
 
----
-
-### API Docs
-
-There is an openapi documentation in `src/main/resources/openapi/api.yml` and a collection postman in `postman/Tools.postman_collection.json`
+2) The postman collection is in: `postman/Tools.postman_collection.json`

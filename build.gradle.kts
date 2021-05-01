@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
-import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     id("org.springframework.boot") version "2.4.5"
@@ -8,7 +7,6 @@ plugins {
     kotlin("jvm") version "1.4.32"
     kotlin("kapt") version "1.4.32"
     kotlin("plugin.spring") version "1.4.32"
-    id("org.springframework.experimental.aot") version "0.9.2"
     id("org.openapi.generator") version "5.1.0"
     id("org.jmailen.kotlinter") version "3.4.3"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.32"
@@ -113,9 +111,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks.withType<BootBuildImage> {
-    builder = "paketobuildpacks/builder:tiny"
-    environment = mapOf("BP_NATIVE_IMAGE" to "true")
 }
