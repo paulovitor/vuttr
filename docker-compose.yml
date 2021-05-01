@@ -2,6 +2,17 @@ version: '3.1'
 
 services:
 
+  api:
+    image: vuttr:0.0.1-SNAPSHOT
+    ports:
+      - 3000:3000
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:example@mongo:27017
+      SPRING_DATA_MONGODB_DATABASE: vuttr
+    depends_on:
+      - mongo
+    links:
+      - mongo
   mongo:
     image: mongo
     restart: always

@@ -5,11 +5,11 @@ A aplicação é um simples repositório para gerenciar ferramentas com seus res
 ---
 
 ## Index
-- [Requirements](#markdown-header-requirements)
-- [Environment Setup](#markdown-header-environment-setup)
-- [Configure Database](#markdown-header-configure-database)
-- [Running the Application](#markdown-header-running-the-application)
-- [API Docs](#markdown-header-api-docs)
+- [Requirements](vuttr#requirements)
+- [Environment Setup](vuttr#environment-setup)
+- [Configure Database](vuttr#configure-database)
+- [Running the Application](vuttr#running-the-application)
+- [API Docs](vuttr#api-docs)
 
 ---
 
@@ -53,6 +53,40 @@ gradle bootRun
 ```
 
 The server is running on `http://localhost:3000`
+
+---
+
+### Running lint check
+
+Run the following command to run lint check
+```sh
+gradle check
+```
+
+The reports will generate in `build/reports/klint`
+
+---
+
+### Building native image
+
+Run the following command to build native docker image
+```sh
+gradle bootBuildImage
+```
+
+After complete will be possible execute application running the command:
+```sh
+docker-compose up -d api
+```
+
+---
+
+### Creating local environment variables 
+
+Run the following command to create environment variables
+```sh
+source env.sh
+```
 
 ---
 
