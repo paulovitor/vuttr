@@ -3,6 +3,7 @@ package br.com.pvsoftware.vuttr.tools
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.any
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
+@ExperimentalCoroutinesApi
 @SpringBootTest
 class ToolsServiceTest {
 

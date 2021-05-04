@@ -21,12 +21,10 @@
 					"raw": "{\n    \"title\": \"Notion\",\n    \"link\": \"https://notion.so\",\n    \"description\": \"All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized.\",\n    \"tags\": [\n        \"organization\",\n        \"planning\",\n        \"collaboration\",\n        \"writing\",\n        \"calendar\"\n    ]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/v1/tools",
-					"protocol": "http",
+					"raw": "{{host}}/v1/tools",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"tools"
@@ -47,12 +45,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:3000/v1/tools?limit=10&tag=organization",
-					"protocol": "http",
+					"raw": "{{host}}/v1/tools?limit=10&tag=organization",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"tools"
@@ -83,12 +79,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:3000/v1/tools/6089b019315b0951bcf6a227",
-					"protocol": "http",
+					"raw": "{{host}}/v1/tools/6089b019315b0951bcf6a227",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"tools",
@@ -110,16 +104,32 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:3000/v1/tools/608ab73cf862796964858495",
-					"protocol": "http",
+					"raw": "{{host}}/v1/tools/608ab73cf862796964858495",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"tools",
 						"608ab73cf862796964858495"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/actuator/health",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"actuator",
+						"health"
 					]
 				}
 			},

@@ -2,6 +2,7 @@ package br.com.pvsoftware.vuttr.tools
 
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -17,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 
+@ExperimentalCoroutinesApi
 @DataMongoTest
 class ToolsRepositoryTest {
 

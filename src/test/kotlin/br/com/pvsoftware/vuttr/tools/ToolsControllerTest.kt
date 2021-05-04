@@ -7,6 +7,7 @@ import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getTool
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolBody
 import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
@@ -24,6 +25,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Flux
 
+@ExperimentalCoroutinesApi
 @WebFluxTest(controllers = [ToolsController::class])
 @Import(ValidationConfig::class)
 class ToolsControllerTest {

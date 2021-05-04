@@ -35,3 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+postman/Heroku.postman_environment.json

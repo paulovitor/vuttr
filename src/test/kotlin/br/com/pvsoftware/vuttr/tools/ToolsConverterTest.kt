@@ -32,7 +32,7 @@ class ToolsConverterTest {
         val dto = converter.convertToDto(entity)
 
         Assertions.assertNotNull(entity)
-        entity?.run {
+        entity.run {
             Assertions.assertEquals(id, dto.id)
             Assertions.assertEquals(title, dto.title)
             Assertions.assertEquals(link, dto.link)
