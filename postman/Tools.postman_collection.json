@@ -14,6 +14,11 @@
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -41,6 +46,11 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -76,17 +86,22 @@
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "{{host}}/v1/tools/6089b019315b0951bcf6a227",
+					"raw": "{{host}}/v1/tools/609308752374aa28aa2c3d4e",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"v1",
 						"tools",
-						"6089b019315b0951bcf6a227"
+						"609308752374aa28aa2c3d4e"
 					]
 				}
 			},
@@ -101,17 +116,22 @@
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "{{host}}/v1/tools/608ab73cf862796964858495",
+					"raw": "{{host}}/v1/tools/609308752374aa28aa2c3d4e",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"v1",
 						"tools",
-						"608ab73cf862796964858495"
+						"609308752374aa28aa2c3d4e"
 					]
 				}
 			},
@@ -130,6 +150,50 @@
 					"path": [
 						"actuator",
 						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.globals.set('token', jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"client_id\":\"{{auth0.client_id}}\",\n    \"client_secret\":\"{{auth0.client_secret}}\",\n    \"audience\":\"{{auth0.audience}}\",\n    \"grant_type\":\"client_credentials\"\n}"
+				},
+				"url": {
+					"raw": "https://pvsoftware.us.auth0.com/oauth/token",
+					"protocol": "https",
+					"host": [
+						"pvsoftware",
+						"us",
+						"auth0",
+						"com"
+					],
+					"path": [
+						"oauth",
+						"token"
 					]
 				}
 			},

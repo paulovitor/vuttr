@@ -71,7 +71,7 @@ docker-compose up -d mongo
 
 2) Creating local environment variables
 ```sh
-source env.sh
+source .env.sh
 ```
 
 3) Start application server
@@ -127,6 +127,6 @@ The reports will generate in `build/reports/tests`
 
 ## 📄 API Docs
 
-1) The openapi documentation is in: `src/main/resources/openapi/api.yml`
+1) The openapi documentation can be access in: `http://localhost:3000/swagger-ui/index.html`
 
-2) The postman collection is in: `postman/Tools.postman_collection.json`
+2) The postman collection is available in: `postman/Tools.postman_collection.json`

@@ -21,7 +21,7 @@ class SpringFoxConfig {
     fun api(): Docket {
         return Docket(DocumentationType.OAS_30)
             .select()
-            .apis(RequestHandlerSelectors.any())
+            .apis(RequestHandlerSelectors.basePackage("br.com.pvsoftware.vuttr.tools"))
             .paths(PathSelectors.any())
             .build()
     }
