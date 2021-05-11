@@ -1,6 +1,38 @@
 language: java
 jdk:
   - openjdk11
-script:
+
+services:
+  - docker
+
+before_install:
   - ./gradlew check
+
+script:
   - ./gradlew test
+
+after_success:
+  - heroku git:remote -a $REPO
+  - heroku login
+  - gradle bootBuildImage --builder heroku/spring-boot-buildpacks
+  - heroku container:login
+  - docker tag $IMAGE_NAME:latest registry.heroku.com/$REPO/web
+  - docker push registry.heroku.com/$REPO/web
+  - heroku config:set \
+    SPRING_DATA_MONGODB_URI=$SPRING_DATA_MONGODB_URI \
+    SPRING_DATA_MONGODB_DATABASE=$SPRING_DATA_MONGODB_DATABASE \
+    AUTH0_AUDIENCE=$AUTH0_AUDIENCE \
+    AUTH0_DOMAIN=$AUTH0_DOMAIN
+  - heroku container:release web --app $REPO
+
+#deploy:
+#  provider: heroku
+#  api-key:
+#    secure: "$HEROKU_API_KEY"
+#  app: $REPO
+#  on:
+#    tags: true
+#    repo: "$REPO"
+#
+#after_deploy:
+#  - curl --location --request GET 'https://$REPO.herokuapp.com/actuator/health'
