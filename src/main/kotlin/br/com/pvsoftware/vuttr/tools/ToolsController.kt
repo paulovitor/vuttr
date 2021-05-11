@@ -3,6 +3,8 @@ package br.com.pvsoftware.vuttr.tools
 import br.com.pvsoftware.api.ToolsApi
 import br.com.pvsoftware.model.Tool
 import br.com.pvsoftware.model.ToolBody
+import br.com.pvsoftware.vuttr.config.ValidationConfig.Companion.CREATE_ROLE
+import br.com.pvsoftware.vuttr.config.ValidationConfig.Companion.DELETE_ROLE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
@@ -14,7 +16,7 @@ import java.net.URI
 @RestController
 class ToolsController(private val service: ToolsService, private val converter: ToolsConverter) : ToolsApi {
 
-    @PreAuthorize("hasAuthority('write:tools')")
+    @PreAuthorize("hasAuthority('${CREATE_ROLE}')")
     override suspend fun createTool(toolBody: ToolBody): ResponseEntity<Tool> =
         service.create(converter.convertToEntity(toolBody))
             .let {
@@ -22,16 +24,14 @@ class ToolsController(private val service: ToolsService, private val converter: 
                     .body(converter.convertToDto(it))
             }
 
-    @PreAuthorize("hasAuthority('read:tools')")
     override fun listTools(limit: Int?, tag: String?): ResponseEntity<Flow<Tool>> =
         ResponseEntity.ok(service.findAll(tag, limit).asFlow().map(converter::convertToDto))
 
-    @PreAuthorize("hasAuthority('write:tools')")
+    @PreAuthorize("hasAuthority('${DELETE_ROLE}')")
     override suspend fun deleteToolById(id: String): ResponseEntity<Unit> =
         if (service.delete(id)) ResponseEntity.noContent().build()
         else ResponseEntity.notFound().build()
 
-    @PreAuthorize("hasAuthority('read:tools')")
     override suspend fun showToolById(id: String): ResponseEntity<Tool> =
         service.findById(id)
             .let {

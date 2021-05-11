@@ -11,6 +11,9 @@ class ValidationConfig {
 
     companion object {
 
+        const val CREATE_ROLE = "create:tools"
+        const val DELETE_ROLE = "delete:tools"
+
         @Bean
         @Primary
         fun validator(): LocalValidatorFactoryBean {

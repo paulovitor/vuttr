@@ -7,6 +7,8 @@ import br.com.pvsoftware.vuttr.TestHelper.Companion.getToolBody
 import br.com.pvsoftware.vuttr.TestHelper.Companion.getToolEntity
 import br.com.pvsoftware.vuttr.config.TestConfig
 import br.com.pvsoftware.vuttr.config.ValidationConfig
+import br.com.pvsoftware.vuttr.config.ValidationConfig.Companion.CREATE_ROLE
+import br.com.pvsoftware.vuttr.config.ValidationConfig.Companion.DELETE_ROLE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -56,7 +58,7 @@ class ToolsControllerTest(@Autowired private val client: WebTestClient) {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = ["write:tools"])
+    @WithMockUser(username = "user", authorities = ["$CREATE_ROLE"])
     fun createToolShouldReturnCreated() = testDispatcher.runBlockingTest {
         val toolEntity = getToolEntity()
         Mockito.`when`(converter.convertToEntity(any())).thenReturn(toolEntity)
@@ -72,7 +74,21 @@ class ToolsControllerTest(@Autowired private val client: WebTestClient) {
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(getToolBody())
             .exchange()
-            .expectStatus().isCreated
+            .expectStatus()
+            .isCreated
+    }
+
+    @Test
+    @WithMockUser
+    fun createToolShouldReturnForbidden() = testDispatcher.runBlockingTest {
+        client
+            .post()
+            .uri(URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(getToolBody())
+            .exchange()
+            .expectStatus()
+            .isForbidden
     }
 
     @Test
@@ -90,7 +106,7 @@ class ToolsControllerTest(@Autowired private val client: WebTestClient) {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = ["write:tools"])
+    @WithMockUser(username = "admin", authorities = ["$DELETE_ROLE"])
     fun deleteToolByIdSholdReturnNoContent() = testDispatcher.runBlockingTest {
         Mockito.`when`(service.delete(Mockito.anyString())).thenReturn(true)
 
@@ -104,7 +120,7 @@ class ToolsControllerTest(@Autowired private val client: WebTestClient) {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = ["write:tools"])
+    @WithMockUser(username = "admin", authorities = ["$DELETE_ROLE"])
     fun deleteToolByIdSholdReturnNotFound() = testDispatcher.runBlockingTest {
         Mockito.`when`(service.delete(Mockito.anyString())).thenReturn(false)
 
@@ -115,6 +131,17 @@ class ToolsControllerTest(@Autowired private val client: WebTestClient) {
             .exchange()
             .expectStatus()
             .isNotFound
+    }
+
+    @Test
+    @WithMockUser
+    fun deleteToolByIdShouldReturnForbidden() = testDispatcher.runBlockingTest {
+        client
+            .delete()
+            .uri("$URI/{id}", 1)
+            .exchange()
+            .expectStatus()
+            .isForbidden
     }
 
     @Test
