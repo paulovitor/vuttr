@@ -1,17 +1,16 @@
 package br.com.pvsoftware.vuttr.tools
 
-import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolBody
-import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
+import br.com.pvsoftware.vuttr.TestHelper.Companion.getToolBody
+import br.com.pvsoftware.vuttr.TestHelper.Companion.getToolEntity
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ContextConfiguration
 
+@ContextConfiguration(classes = [ToolsConverterImpl::class])
 @SpringBootTest
-class ToolsConverterTest {
-
-    @Autowired
-    private lateinit var converter: ToolsConverter
+class ToolsConverterTest(@Autowired private val converter: ToolsConverter) {
 
     @Test
     fun convertToEntityShouldReturnEntity() {

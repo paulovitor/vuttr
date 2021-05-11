@@ -2,14 +2,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
-    id("org.springframework.boot") version "2.4.5"
+    id("org.springframework.boot") version "2.5.0-RC1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.4.32"
-    kotlin("kapt") version "1.4.32"
-    kotlin("plugin.spring") version "1.4.32"
+    kotlin("jvm") version "1.5.0-RC"
+    kotlin("kapt") version "1.5.0-RC"
+    kotlin("plugin.spring") version "1.5.0-RC"
     id("org.openapi.generator") version "5.1.0"
     id("org.jmailen.kotlinter") version "3.4.3"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.32"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.0-RC"
 }
 
 group = "br.com.pvsoftware"
@@ -32,6 +32,8 @@ buildscript {
     }
 }
 
+extra["spring-security.version"] = "5.5.0-RC2"
+
 val generatedSourcesDir = "$buildDir/generated/openapi"
 
 tasks.compileJava {
@@ -50,11 +52,13 @@ openApiGenerate {
     modelPackage.set("$group.model")
     generateApiTests.set(false)
     generateModelTests.set(false)
-    configOptions.set(mapOf(
+    configOptions.set(
+        mapOf(
             "dateLibrary" to "java8",
             "interfaceOnly" to "true",
             "reactive" to "true"
-    ))
+        )
+    )
 }
 
 kotlinter {
@@ -79,7 +83,7 @@ sourceSets {
 }
 
 repositories {
-    maven { url = uri("https://repo.spring.io/release") }
+    maven { url = uri("https://repo.spring.io/milestone") }
     mavenCentral()
 }
 
@@ -101,6 +105,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")

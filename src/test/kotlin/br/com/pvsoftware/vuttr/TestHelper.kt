@@ -1,7 +1,8 @@
-package br.com.pvsoftware.vuttr.tools
+package br.com.pvsoftware.vuttr
 
 import br.com.pvsoftware.model.Tool
 import br.com.pvsoftware.model.ToolBody
+import br.com.pvsoftware.vuttr.tools.ToolEntity
 import org.mockito.Mockito
 
 class TestHelper {

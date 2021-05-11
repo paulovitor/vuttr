@@ -1,7 +1,7 @@
 package br.com.pvsoftware.vuttr.tools
 
-import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.any
-import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
+import br.com.pvsoftware.vuttr.TestHelper.Companion.any
+import br.com.pvsoftware.vuttr.TestHelper.Companion.getToolEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -13,20 +13,20 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.ContextConfiguration
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
+@ContextConfiguration(classes = [ToolsServiceImpl::class])
 @ExperimentalCoroutinesApi
 @SpringBootTest
-class ToolsServiceTest {
+class ToolsServiceTest(@Autowired private val service: ToolsService) {
 
-    private lateinit var service: ToolsService
-
-    @Mock
+    @MockBean
     private lateinit var repository: ToolsRepository
 
     private val testDispatcher = TestCoroutineDispatcher()
@@ -34,10 +34,6 @@ class ToolsServiceTest {
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-
-        MockitoAnnotations.openMocks(this)
-
-        service = ToolsServiceImpl(repository)
     }
 
     @AfterEach

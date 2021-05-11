@@ -1,6 +1,6 @@
 package br.com.pvsoftware.vuttr.tools
 
-import br.com.pvsoftware.vuttr.tools.TestHelper.Companion.getToolEntity
+import br.com.pvsoftware.vuttr.TestHelper.Companion.getToolEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -20,10 +20,7 @@ import org.springframework.data.domain.Pageable
 
 @ExperimentalCoroutinesApi
 @DataMongoTest
-class ToolsRepositoryTest {
-
-    @Autowired
-    private lateinit var repository: ToolsRepository
+class ToolsRepositoryTest(@Autowired private val repository: ToolsRepository) {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
