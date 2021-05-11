@@ -16,7 +16,7 @@ import java.net.URI
 @RestController
 class ToolsController(private val service: ToolsService, private val converter: ToolsConverter) : ToolsApi {
 
-    @PreAuthorize("hasAuthority('${CREATE_ROLE}')")
+    @PreAuthorize("hasAuthority('$CREATE_ROLE')")
     override suspend fun createTool(toolBody: ToolBody): ResponseEntity<Tool> =
         service.create(converter.convertToEntity(toolBody))
             .let {
@@ -27,7 +27,7 @@ class ToolsController(private val service: ToolsService, private val converter: 
     override fun listTools(limit: Int?, tag: String?): ResponseEntity<Flow<Tool>> =
         ResponseEntity.ok(service.findAll(tag, limit).asFlow().map(converter::convertToDto))
 
-    @PreAuthorize("hasAuthority('${DELETE_ROLE}')")
+    @PreAuthorize("hasAuthority('$DELETE_ROLE')")
     override suspend fun deleteToolById(id: String): ResponseEntity<Unit> =
         if (service.delete(id)) ResponseEntity.noContent().build()
         else ResponseEntity.notFound().build()
