@@ -2,11 +2,10 @@
 
 The application is a simple repository to manage tools with your respective names, links, descriptions and tags
 
----
 
 ## Index
+
 - [Requirements](#requirements)
-- [Technologies used](#technologies-used)
 - [How to use](#how-to-use)
     - [Run application via Docker](#run-application-via-docker)
     - [Run application via bootJar](#run-application-via-bootjar)
@@ -15,7 +14,6 @@ The application is a simple repository to manage tools with your respective name
     - [Run unit tests](#run-unit-tests)
 - [API Docs](#api-docs)
 
----
 
 ## 📦 Requirements
 
@@ -23,11 +21,8 @@ The application is a simple repository to manage tools with your respective name
 * Gradle
 * Docker
 
----
 
 ## 🚀 How to use
-
----
 
 ### Run application via Docker
 
@@ -59,8 +54,6 @@ docker-compose logs -f
 
 The server is running on `http://localhost:3000`
 
----
-
 ### Run application via bootJar
 
 1) The mongodb docker container need is running
@@ -81,8 +74,6 @@ gradle bootRun
 
 The server is running on `http://localhost:3000`
 
----
-
 ### Run application via Intellij
 
 1) The mongodb docker container need is running
@@ -101,8 +92,6 @@ docker-compose up -d mongo
 
 The server is running on `http://localhost:3000`
 
----
-
 ### Run check lint
 
 Run the following command to run lint check
@@ -111,8 +100,6 @@ gradle check
 ```
 
 The reports will generate in `build/reports/klint`
-
----
 
 ### Run unit tests
 
@@ -123,7 +110,6 @@ gradle test
 
 The reports will generate in `build/reports/tests`
 
----
 
 ## 📄 API Docs
 

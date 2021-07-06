@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   api:
-    image: vuttr:0.0.1-SNAPSHOT
+    image: registry.heroku.com/vuttr-pvsoftware:0.0.1-SNAPSHOT
     ports:
       - 3000:3000
     environment:

@@ -6,11 +6,19 @@ info:
     name: MIT
 servers:
   - url: http://localhost:3000/v1
+security: 
+  - oAuth: 
+    - create:tools
+    - delete:tools
 paths:
   /tools:
     get:
       summary: List all tools
       operationId: listTools
+      security: 
+        - oAuth: 
+          - create:tools
+          - delete:tools
       tags:
         - tools
       parameters:
@@ -44,6 +52,10 @@ paths:
     post:
       summary: Create a tool
       operationId: createTool
+      security: 
+        - oAuth: 
+          - create:tools
+          - delete:tools
       tags:
         - tools
       requestBody:
@@ -62,6 +74,10 @@ paths:
     get:
       summary: Info for a specific tool
       operationId: showToolById
+      security: 
+        - oAuth: 
+          - create:tools
+          - delete:tools
       tags:
         - tools
       parameters:
@@ -81,6 +97,9 @@ paths:
     delete:
       summary: Delete for a specific tool
       operationId: deleteToolById
+      security: 
+        - oAuth: 
+          - delete:tools
       tags:
         - tools
       parameters:
@@ -98,6 +117,16 @@ paths:
         default:
           $ref: '#/components/responses/UnexpectedError'
 components:
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the password grant flow.
+      flows:
+        password:
+          tokenUrl: https://pvsoftware.us.auth0.com/oauth/token
+          scopes:
+            create:tools: create and list tools
+            delete:tools: delete tools
   schemas:
     Tool:
       required:
